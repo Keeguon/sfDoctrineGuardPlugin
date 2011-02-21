@@ -53,6 +53,7 @@ sfGuardGroupPermission:
 sfGuardUser:
   actAs: [Timestampable]
   columns:
+    id: { type: string(64), primary: true }
     first_name: string(255)
     last_name: string(255)
     email_address:
@@ -102,7 +103,7 @@ sfGuardUserPermission:
   actAs: [Timestampable]
   columns:
     user_id:
-      type: integer
+      type: string(64)
       primary: true
     permission_id:
       type: integer
@@ -125,7 +126,7 @@ sfGuardUserGroup:
   actAs: [Timestampable]
   columns:
     user_id:
-      type: integer
+      type: string(64)
       primary: true
     group_id:
       type: integer
@@ -147,7 +148,7 @@ sfGuardRememberKey:
       filter: false
   actAs: [Timestampable]
   columns:
-    user_id: integer
+    user_id: string(64)
     remember_key: string(32)
     ip_address: string(50)
   relations:
@@ -166,7 +167,7 @@ sfGuardForgotPassword:
   actAs: [Timestampable]
   columns:
     user_id:
-      type: integer
+      type: string(64)
       notnull: true
     unique_key: string(255)
     expires_at:
