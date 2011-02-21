@@ -24,6 +24,27 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
     return (string) $this->getName().' ('.$this->getUsername().')';
   }
 
+ /**
+  * Generate somewhat strong unique identifiers
+  * Example usage:
+  * - create non standard mysql ids
+  * - create app key/secret for OAuth
+  * - ...
+  *
+  * @return string containing the unique identifier
+  */
+  public function generateUid() {
+    $fp = fopen('/dev/urandom','rb');
+    $entropy = fread($fp, 32);
+    fclose($fp);
+    // in case /dev/urandom is reusing entropy from its pool, let's add a bit more entropy
+    $entropy .= uniqid(mt_rand(), true);
+    $hash = sha1($entropy);
+    // if you're obsessed w/ security use the following instead
+    // $hash = hash('sha256', $entropy)
+    return $hash;
+  }
+                                                             
   /**
    * Returns the first and last name of the user concatenated together
    *
@@ -288,5 +309,15 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
     {
       $this->_set('password', $v);
     }
+  }
+
+ /**
+  * preInsert hook
+  *
+  * @param $event
+  */
+  public function preInsert($event)
+  {
+    $this->id = $this->generateUid();
   }
 }
